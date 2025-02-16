@@ -1,0 +1,83 @@
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import { Pagination } from "swiper/modules";
+import { LayoutDashboard, Inbox, Workflow } from "lucide-react";
+
+const features = [
+  {
+    icon: <LayoutDashboard className="w-12 h-12 text-purple-600" />,
+    title: "Seamless Message Management",
+    description: "Organize, track, and manage all conversations from one place."
+  },
+  {
+    icon: <Inbox className="w-12 h-12 text-purple-600" />,
+    title: "Centralized CRM Inbox",
+    description: "Efficiently handle messages within an integrated system."
+  },
+  {
+    icon: <Workflow className="w-12 h-12 text-purple-600" />,
+    title: "Smart Workflow Automation",
+    description: "Automate repetitive tasks and improve efficiency."
+  }
+];
+
+const FeatureSection = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <div className="w-full max-w-6xl mx-auto px-4 py-12">
+      <h2 className="text-3xl font-bold text-center mb-12 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+        Features & Benefits
+      </h2>
+
+      {isMobile ? (
+        // **MOBILE VIEW - Carousel**
+        <Swiper
+          spaceBetween={20}
+          slidesPerView={1}
+          pagination={{ clickable: true }}
+          modules={[Pagination]}
+          className="w-full"
+        >
+          {features.map((feature, index) => (
+            <SwiperSlide key={index}>
+              <div className="bg-white rounded-xl p-6 shadow-lg text-center">
+                <div className="flex justify-center">{feature.icon}</div>
+                <h3 className="text-xl font-semibold mt-4">{feature.title}</h3>
+                <p className="text-gray-600 mt-2">{feature.description}</p>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      ) : (
+        // **LAPTOP VIEW - Hover Effect**
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {features.map((feature, index) => (
+            <motion.div
+              key={index}
+              whileHover={{ scale: 1.1, y: -5 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-xl p-6 shadow-lg text-center transform transition-all"
+            >
+              <div className="flex justify-center">{feature.icon}</div>
+              <h3 className="text-xl font-semibold mt-4">{feature.title}</h3>
+              <p className="text-gray-600 mt-2">{feature.description}</p>
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default FeatureSection;
